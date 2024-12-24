@@ -78,7 +78,7 @@ Add New
             <td className="p-2 md:p-4">{product.productPrice}</td>
             <td className="p-2 md:p-4">{truncateText(product.productDescription,20)}</td>
             <td className="relative p-2 md:p-4 flex justify-center space-x-2">
-                <Link to={"/edit"} >
+                <Link to={"/edit/"+product.id} >
                 <button className="bg-blue-500 text-white px-3 py-1 rounded-md text-xs md:text-sm">Edit</button>
                 </Link>
                 <button className="bg-red-500 text-white px-3 py-1 rounded-md text-xs md:text-sm" onClick={()=>{deleteProduct(product.id)}} >Delete</button>

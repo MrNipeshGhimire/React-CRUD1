@@ -1,6 +1,43 @@
-import { Link } from "react-router-dom"
+import axios from "axios"
+import { useEffect,useState } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 const EditProduct=()=>{
+    const {id} = useParams()
+
+    const navigate = useNavigate()
+
+    const[product,setProduct] = useState({})
+
+    const handleChange=(e)=>{
+        const {name, value} = e.target 
+        setProduct({
+            ...product,
+            [name]:value
+        })
+    }
+
+    const EditProduct=async(e)=>{
+        e.preventDefault()
+       const response = await axios.put('https://67175b9db910c6a6e027b39d.mockapi.io/products/'+id,product)
+       if(response.status === 200){
+        setProduct(response.data)
+        navigate("/")
+       }
+    }
+
+    useEffect(()=>{
+        const FetchProduct =async()=>{
+            const response = await axios.get('https://67175b9db910c6a6e027b39d.mockapi.io/products/'+id)
+            if(response.status === 200){
+                console.log("Data aayo")
+                setProduct(response.data)
+            }
+         }   
+         FetchProduct()
+ 
+    },[id])
+
     return(
         <>
 <Link to={"/"} >
@@ -22,27 +59,27 @@ Home Page
 </div>
 
 <div className="p-6 space-y-6">
-    <form action="#">
+    <form onSubmit={EditProduct}>
         <div className="grid grid-cols-6 gap-6">
             <div className="col-span-6 sm:col-span-3">
                 <label for="product-name" className="text-sm font-medium text-gray-900 block mb-2">Product Name</label>
-                <input type="text" name="productName" id="product-name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Product Name" required=""/>
+                <input type="text" name="productName" value={product.productName} onChange={handleChange} id="product-name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Product Name" required=""/>
             </div>
             <div className="col-span-6 sm:col-span-3">
                 <label for="category" className="text-sm font-medium text-gray-900 block mb-2">Category</label>
-                <input type="text" name="productCategory" id="category" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Category" required=""/>
+                <input type="text" name="productCategory" value={product.productCategory} onChange={handleChange} id="category" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Category" required=""/>
             </div>
             <div className="col-span-6 sm:col-span-3">
                 <label for="brand" className="text-sm font-medium text-gray-900 block mb-2">Brand</label>
-                <input type="text" name="productBrand" id="brand" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Brand" required=""/>
+                <input type="text" name="productBrand" value={product.productBrand} onChange={handleChange} id="brand" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Brand" required=""/>
             </div>
             <div className="col-span-6 sm:col-span-3">
                 <label for="price" className="text-sm font-medium text-gray-900 block mb-2">Price</label>
-                <input type="number" name="productPrice" id="price" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Price" required=""/>
+                <input type="number" name="productPrice" value={product.productPrice} onChange={handleChange} id="price" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Enter Price" required=""/>
             </div>
             <div className="col-span-full">
                 <label for="product-details" className="text-sm font-medium text-gray-900 block mb-2">Product Details</label>
-                <textarea id="product-details" name="productDescription" rows="6" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4" placeholder="Enter Description"></textarea>
+                <textarea id="product-details" name="productDescription" value={product.productDescription} onChange={handleChange} rows="6" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4" placeholder="Enter Description"></textarea>
             </div>
             <div className="p-6 border-t border-gray-200 rounded-b">
               <button className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" type="submit">Add Product</button>
